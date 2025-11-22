@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 第一种：构造方法的方式 -->
+    <bean id="car" class="com.haust.pojo.Car">
+        <constructor-arg name="name" value="保时捷"/>
+        <constructor-arg name="price" value="1000000"/>
+    </bean>
+    <!-- 第二种：set方法的方式 -->
+    <bean id="car2" class="com.haust.pojo.Car">
+        <property name="name" value="奇瑞QQ"/>
+        <property name="price" value="40000"/>
+    </bean>
+    <!-- 注入对象类型的属性 -->
+    <bean id="person" class="com.haust.pojo.Person">
+        <property name="name" value="张三"/>
+        <!-- ref属性：引用另一个bean的id或name -->
+        <property name="car" ref="car2"/>
+    </bean>
+
+<!--    SpEL：Spring Expression Language.-->
+<!--    语法:#{ SpEL }-->
+    <!-- SpEL的注入的方式 -->
+    <bean id="car3" class=" com.haust.pojo.Car">
+        <property name="name" value="#{'奔驰'}"/>
+        <property name="price" value="#{800000}"/>
+    </bean>
+
+    <bean id="person2" class="com.haust.pojo.Person">
+        <property name="name" value="#{'李四'}"/>
+        <property name="car" value="#{car3}"/>
+    </bean>
+
+    <bean id="carInfo" class="com.haust.pojo.CarInfo"></bean>
+
+<!--    引用了另一个类的属性-->
+    <bean id="car4" class="com.haust.pojo.Car">
+        <!--   <property name="name" value="#{'奔驰'}"/> -->
+        <property name="name" value="#{carInfo.carName}"/>
+        <property name="price" value="#{carInfo.calculatePrice()}"/>
+    </bean>
+
+    <!-- Spring的复杂类型的注入===================== -->
+    <bean id="collectionBean" class="com.haust.pojo.CollectionBean">
+        <!-- 数组类型的属性 -->
+        <property name="arrs">
+            <list>
+                <value>张三</value>
+                <value>李四</value>
+                <value>王五</value>
+            </list>
+        </property>
+
+        <!-- 注入List集合的数据 -->
+        <property name="list">
+            <list>
+                <value>芙蓉</value>
+                <value>如花</value>
+                <value>凤姐</value>
+            </list>
+        </property>
+
+        <!-- 注入Map集合 -->
+        <property name="map">
+            <map>
+                <entry key="aaa" value="111"/>
+                <entry key="bbb" value="222"/>
+                <entry key="ccc" value="333"/>
+            </map>
+        </property>
+        <!-- Properties的注入 -->
+        <property name="properties">
+            <props>
+                <prop key="username">root</prop>
+                <prop key="password">123</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="userDao" class="com.haust.dao.impl.UserDaoImpl"></bean>
+    <bean id="userService"
+          class="com.haust.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao" />
+    </bean>
+</beans>

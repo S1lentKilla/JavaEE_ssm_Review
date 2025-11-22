@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="db.properties"></properties>
+    <!--日志-->
+    <settings>
+        <!--标准的日志工厂实现-->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+        <!--批量别名定义，扫描整个包下的类，别名为类名（大小写不敏感）-->
+        <package name="com.haust.pojo"/>
+    </typeAliases>
+
+    <!--和spring整合后environments配置将废除-->
+    <environments default="development">
+        <environment id="development">
+            <!--使用jdbc事务管理-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--数据库连接池-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--加载映射文件-->
+    <mappers>
+        <!--注册指定包下的所有mapper接口-->
+        <package name="com.haust.mapper"/>
+    </mappers>
+</configuration>

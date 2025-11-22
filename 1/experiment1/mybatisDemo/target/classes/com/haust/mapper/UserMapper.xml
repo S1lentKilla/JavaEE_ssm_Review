@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，用于隔离sql -->
+<mapper namespace="com.haust.mapper.UserMapper">
+    <!-- id:statement的id 或者叫做sql的id-->
+    <!-- parameterType:声明输入参数的类型 -->
+    <!-- resultType:声明输出结果的类型，应该填写pojo的全路径 -->
+    <!-- #{}：输入参数的占位符，相当于jdbc的？ -->
+    <select id="queryUserById" parameterType="int"
+            resultType="com.haust.pojo.User">
+        SELECT * FROM `user` WHERE id  = #{id}
+    </select>
+
+    <!-- 如果返回多个结果，mybatis会自动把返回的结果放在list容器中 -->
+    <!-- resultType 的配置和返回一个结果的配置一样 -->
+    <select id="queryUserByUsername1" parameterType="string"
+            resultType="user">
+        SELECT * FROM `user` WHERE username LIKE #{username}
+    </select>
+
+    <!-- 如果传入的参数是简单数据类型，${}里面必须写value -->
+    <select id="queryUserByUsername2" parameterType="string"
+            resultType="user">
+        SELECT * FROM `user` WHERE username LIKE '%${value}%'
+    </select>
+
+    <select id="queryUserByUsername3" parameterType="string"
+            resultType="user">
+        SELECT * FROM `user` WHERE username LIKE concat('%',#{username},'%')
+    </select>
+
+    <!-- 保存用户 -->
+    <insert id="saveUser1"
+            parameterType="user" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO `user`(username,birthday,sex,address) VALUES
+            (#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!-- 保存用户 -->
+    <insert id="saveUser2"
+            parameterType="user">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        INSERT INTO `user`(username,birthday,sex,address) VALUES
+        (#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUserById"
+            parameterType="user">
+        UPDATE `user` SET
+            username = #{username} WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUserById" parameterType="int">
+        delete from user where
+            id=#{id}
+    </delete>
+
+</mapper>

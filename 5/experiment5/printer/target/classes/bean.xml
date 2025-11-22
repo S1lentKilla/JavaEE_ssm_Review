@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="colorInk" class="com.haust.pojo.impl.ColorInkImpl"></bean>
+    <bean id="greyInk" class="com.haust.pojo.impl.GreyInkImp"></bean>
+    <bean id="a4Paper" class="com.haust.pojo.impl.A4Paper">
+        <property name="rows" value="10"></property>
+        <property name="cols" value="8"></property>
+    </bean>
+    <bean id="b5Paper" class="com.haust.pojo.impl.B5Paper">
+        <property name="rows" value="6"></property>
+        <property name="cols" value="5"></property>
+    </bean>
+    <bean id="printer" class="com.haust.pojo.Printer">
+        <property name="ink" ref="colorInk"></property>
+        <property name="paper" ref="b5Paper"></property>
+    </bean>
+</beans>

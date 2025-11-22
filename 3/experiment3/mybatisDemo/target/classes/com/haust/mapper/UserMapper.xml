@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haust.mapper.UserMapper">
+    <select id="queryUserByWhere" parameterType="user" resultType="user">
+        select id,username,birthday,sex,address from user where sex=#{sex} and
+        username like '%${username}%'
+    </select>
+    <select id="queryUserByWhere1" parameterType="user" resultType="user">
+        select id,username,birthday,sex,address from user where 1=1
+        <if test="sex!=null and sex != ''">
+            and sex=#{sex}
+        </if>
+        <if test="username!=null and username!=''">
+            and username like '%${username}%'
+        </if>
+    </select>
+    <!-- 根据条件查询用户 -->
+    <sql id="userFields">
+        id,username,birthday,sex,address
+    </sql>
+    <!-- 使用include标签加载sql片段；refid是sql片段id -->
+    <!-- where标签可以自动添加where关键字，同时处理sql语句中第一个and关键字 -->
+<!--    如果要使用别的Mapper.xml 配置的 sql 片段，可以在 refid 前面加上对应的 Mapper.xml 的-->
+<!--    namespace。-->
+    <select id="queryUserByWhere2" parameterType="user" resultType="user">
+        select <include refid="userFields"></include> from user
+        <where>
+            <if test="sex!=null">
+                and sex=#{sex}
+            </if>
+            <if test="username!=null and username!=''">
+                and username like '%${username}%'
+            </if>
+        </where>
+    </select>
+    <!-- 根据ids查询用户 -->
+    <!-- foreach标签，进行遍历 -->
+    <!-- collection：遍历的集合，这里是QueryVo的ids属性 -->
+    <!-- item：遍历的项目，可以随便写，但是和后面的#{}里面要一致 -->
+    <!-- open：在前面添加的sql片段 -->
+    <!-- close：在结尾处添加的sql片段 -->
+    <!-- separator：指定遍历的元素之间使用的分隔符 -->
+    <select id="queryUserByIds" parameterType="queryVo" resultType="user">
+        select * from user
+        <where>
+            id in
+            <foreach collection="ids" item="i" open="(" separator="," close=")">
+                #{i}
+            </foreach>
+        </where>
+    </select>
+</mapper>

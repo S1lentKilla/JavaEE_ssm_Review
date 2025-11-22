@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <beans>
+        <bean id="weapon1" class="com.haust.Flighter"></bean>
+        <bean id="weapon2" class="com.haust.Tank"></bean>
+        <bean id="army" class="com.haust.Army">
+            <property name="set">
+                <set>
+                    <ref bean="weapon1"/>
+                    <ref bean="weapon2"/>
+                </set>
+            </property>
+        </bean>
+    </beans>
+</beans>

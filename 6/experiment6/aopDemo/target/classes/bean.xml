@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <!-- 目标类================ -->
+    <bean id="orderDao" class="com.haust.dao.impl.OrderDaoImpl">
+
+    </bean>
+    <!-- 配置切面类 -->
+    <bean id="aspectXml" class="com.haust.aspect.AspectXml"></bean>
+
+    <!-- 进行aop的配置 -->
+    <aop:config>
+        <!-- 配置切入点表达式:哪些类的哪些方法需要进行增强 -->
+        <aop:pointcut expression="execution(*
+com.haust.dao.impl.*DaoImpl.save(..))" id="pointcut1"/>
+        <aop:pointcut expression="execution(*
+com.haust.dao.impl.*DaoImpl.delete(..))" id="pointcut2"/>
+        <aop:pointcut expression="execution(*
+com.haust.dao.impl.*DaoImpl.update(..))" id="pointcut3"/>
+        <aop:pointcut expression="execution(*
+com.haust.dao.impl.*DaoImpl.find(..))" id="pointcut4"/>
+        <!-- 配置切面 -->
+        <aop:aspect ref="aspectXml">
+            <aop:before method="before" pointcut-ref="pointcut1"/>
+            <aop:after-returning method="afterReturing" pointcut-ref="pointcut2" returning="obj"/>
+            <aop:around method="around" pointcut-ref="pointcut3"/>
+            <aop:after-throwing method="afterThrowing" pointcut-ref="pointcut4" throwing="e"/>
+            <aop:after method="after" pointcut-ref="pointcut4"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

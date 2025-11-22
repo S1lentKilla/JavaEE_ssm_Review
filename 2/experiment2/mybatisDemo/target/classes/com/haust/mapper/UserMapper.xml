@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haust.mapper.UserMapper">
+    <select id="findUserByQueryVo" parameterType="queryvo" resultType="user">
+        select * from user where username like '%${user.username}%'
+    </select>
+
+    <!-- 获取用户列表总数-->
+    <select id="findUserCount" resultType="int">
+        select count(1) from user
+    </select>
+
+<!--    如果sql查询字段名和pojo的属性名不一致，可以通过resultMap将字段名和属性名作为-->
+<!--    一个对应关系 ，resultMap实质上还需要将查询结果映射到pojo对象中。-->
+<!--    Id：此属性表示查询结果集的唯一标识，非常重要。如果是多个字段为复合唯一约束则-->
+<!--    定义多个Id。-->
+<!--    Property：表示 User类的属性。-->
+<!--    Column：表示sql查询出来的字段名。-->
+<!--    Column和property放在一块儿表示将sql查询出来的字段映射到指定的pojo类属性上。-->
+<!--    Result：普通结果，即pojo的属性。-->
+    <resultMap id="userListResultMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="birthday" column="birthday"></result>
+    </resultMap>
+    <sql id="query_user_where">
+        id = #{user.id}
+    </sql>
+    <select id="findUserListResultMap" parameterType="queryVo" resultMap="userListResultMap">
+        select username,birthday from user
+        <where>
+            <include refid="query_user_where"></include>
+        </where>
+    </select>
+
+<!--    添加selectKey实现将主键返回-->
+<!--    keyProperty:返回的主键存储在pojo中的哪个属性-->
+<!--    order：selectKey的执行顺序，是相对与insert语句来说，由于mysql的自增原理执行-->
+<!--    完insert语句之后才将主键生成，所以这里selectKey的执行顺序为after-->
+<!--    resultType:返回的主键是什么类型-->
+<!--    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">-->
+<!--        select UUID()-->
+<!--    </selectKey>-->
+    <insert id="insertUser" parameterType="user">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username, birthday, sex, address) VALUES (#{username},#{birthday},#{sex},#{address});
+    </insert>
+</mapper>
