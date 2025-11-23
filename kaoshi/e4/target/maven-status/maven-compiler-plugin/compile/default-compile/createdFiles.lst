@@ -1,0 +1,5 @@
+com\haust\mapper\BookMapper.class
+com\haust\pojo\Book.class
+com\haust\service\impl\BookServiceImpl.class
+com\haust\controller\BookController.class
+com\haust\service\BookService.class
